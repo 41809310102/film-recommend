@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="referrer" content="never">
+  <meta charset="UTF-8">
+  <title>电影推荐</title>
+  <script src="https://cdn.lyshark.com/javascript/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="/layui-main/dist/css/layui.css">
+  <script src="/layui-main/dist/layui.js"></script>
+  <link rel="stylesheet" href="../static/layui-main/dist/css/layui.css">
+  <script src="../static/layui-main/dist/layui.js"></script>
+</head>
+<body>
+<div>
+
+</div>
+<span class="layui-breadcrumb">
+  <a href="">首页</a>
+  <a href="">电影频道</a>
+  <a href="">电影信息</a>
+</span>
+<div  id="user-admin" class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+  <ul class="layui-tab-title">
+    <li class="layui-this">爱情</li>
+    <li>喜剧</li>
+    <li>奇幻</li>
+    <li>科幻</li>
+    <li>动画</li>
+    <li>战争</li>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+      <div class="layui-card">
+        <div class="layui-card-header">爱情电影</div>
+        <div class="layui-card-body">
+          <div class="bookbox" id="bookbox1">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="layui-tab-item ">
+      <div class="layui-card">
+        <div class="layui-card-header">喜剧电影</div>
+        <div class="layui-card-body">
+          <div class="bookbox" id="bookbox2">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="layui-tab-item ">
+      <div class="layui-card">
+        <div class="layui-card-header">奇幻电影</div>
+        <div class="layui-card-body">
+          <div class="bookbox" id="bookbox3">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="layui-tab-item ">
+      <div class="layui-card">
+        <div class="layui-card-header">科幻电影</div>
+        <div class="layui-card-body">
+          <div class="bookbox" id="bookbox4">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="layui-tab-item">
+      <div class="layui-card">
+        <div class="layui-card-header">战争电影</div>
+        <div class="layui-card-body">
+          <div class="bookbox" id="bookbox5">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="layui-tab-item">
+      <div class="layui-card">
+        <div class="layui-card-header">动画信息</div>
+        <div class="layui-card-body">
+          <div class="bookbox" id="bookbox6">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<iframe frameborder="0" scrolling="yes" style="width: 100%;height: 800px"  src="" id="aa"></iframe>
+<div style="display: none" id="biaodan">
+  <div class="layui-form-item">
+    <label class="layui-form-label">电影名称:</label>
+    <div class="layui-input-inline">
+      <input type="text" id="moviename" name="moviename" autocomplete="off"
+             value=""
+             class="layui-input" disabled>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">我的评分:</label>
+    <div class="layui-input-inline">
+      <input type="text" id="grade" name="grade" required lay-verify="required"
+             autocomplete="off" value="" class="layui-input">
+    </div>
+    <div class="layui-form-mid layui-word-aux">支持小数点后一位，例如3.5</div>
+  </div>
+</div>
+<style>
+  .layui-card-body .bookbox{
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto;
+  }
+
+  .bookbox .book{
+    margin-top: 20px;
+    width: 200px;
+    height: 280px;
+    margin-left: 10px;
+    background-color: rgba(199, 199, 199, 0.57);
+    display: flex;
+  }
+
+  .book .pic{
+    width: 80%;
+    margin-left: 10%;
+    height: 70%;
+  }
+
+  .book .title{
+    font-size: 15px;
+    color: #b8a206;
+    width: 300px;
+    height: 20px;
+    margin-top: 100%;
+    margin-left: -70%;
+  }
+  .book .title1{
+    font-size: 12px;
+    color: #335ae8;
+    width: 300px;
+    height: 20px;
+    margin-top: 110%;
+    margin-left: -75%;
+  }
+  .book .title2{
+    font-size: 16px;
+    color: #e20934;
+    width: 120px;
+    height: 20px;
+    margin-top: 125%;
+    margin-left: -80%;
+  }
+
+  .book .buttons{
+    margin-top: 125%;
+    margin-left: 5%;
+  }
+  .book .button1{
+    margin-top: 5%;
+    margin-left: 5%;
+  }
+
+</style>
+
+<script >
+  //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+  layui.use('element', function(){
+    var element = layui.element;
+    //…
+  });
+
+  found_share()
+  function  found_share(){
+    //窗口弹出input文本框输入的值
+    var search_data = ""
+    $.ajax({
+      url: "film/search",
+      data:"",
+      contentType:'application/json;charset=utf-8',
+      type: 'get',
+      dataType: 'json',
+      success(data){
+        if(data.code==1){
+          var res = data.data
+          let list1 = '';
+          let list2 = '';
+          let list3 = '';
+          let list4 = '';
+          let list5 = '';
+          let list6 = '';
+          let  i = data.data.length;
+          for(let k = 0;k<i;k++){
+            if(res[k].typename=='爱情'){
+              list1+='<div class="book">' +'<img src="'+res[k].pic_url+'" class="pic" alt="">'+
+                      '<text class="title">' +"影名:"+res[k].name+ '</text>'+
+                      '<text class="title1">' +"主演:"+res[k].importrole+ '</text>'+
+                      '<div id="layerBtn" class="title2">' +"评分:"+res[k].douban+ '</div>'+
+                      '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-xs">' +'详情'+
+                      '</button>'+'</div>'+
+                      '<div class="button1">'+'<button type="button" onclick="give_grade('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'我要评分'+
+                      '</button>'+'</div></div>'
+            }else if(res[k].typename=='喜剧'){
+              list2+='<div class="book">' +'<img src="'+res[k].pic_url+'" class="pic" alt="">'+
+                      '<text class="title">' +"影名:"+res[k].name+ '</text>'+
+                      '<text class="title1">' +"主演:"+res[k].importrole+ '</text>'+
+                      '<div id="layerBtn" class="title2">' +"评分:"+res[k].douban+ '</div>'+
+                      '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-xs">' +'详情'+
+                      '</button>'+'</div>'+
+                      '<div class="button1">'+'<button type="button" onclick="give_grade('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'我要评分'+
+                      '</button>'+'</div></div>'
+            }else if(res[k].typename=='奇幻'){
+              list3+='<div class="book">' +'<img src="'+res[k].pic_url+'" class="pic" alt="">'+
+                      '<text class="title">' +"影名:"+res[k].name+ '</text>'+
+                      '<text class="title1">' +"主演:"+res[k].importrole+ '</text>'+
+                      '<div id="layerBtn" class="title2">' +"评分:"+res[k].douban+ '</div>'+
+                      '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-xs">' +'详情'+
+                      '</button>'+'</div>'+
+                      '<div class="button1">'+'<button type="button" onclick="give_grade('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'我要评分'+
+                      '</button>'+'</div></div>'
+            }else if(res[k].typename=='科幻'){
+              list4+='<div class="book">' +'<img src="'+res[k].pic_url+'" class="pic" alt="">'+
+                      '<text class="title">' +"影名:"+res[k].name+ '</text>'+
+                      '<text class="title1">' +"主演:"+res[k].importrole+ '</text>'+
+                      '<div id="layerBtn" class="title2">' +"评分:"+res[k].douban+ '</div>'+
+                      '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-xs">' +'详情'+
+                      '</button>'+'</div>'+
+                      '<div class="button1">'+'<button type="button" onclick="give_grade('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'我要评分'+
+                      '</button>'+'</div></div>'
+            }else if(res[k].typename=='战争'){
+              list5+='<div class="book">' +'<img src="'+res[k].pic_url+'" class="pic" alt="">'+
+                      '<text class="title">' +"影名:"+res[k].name+ '</text>'+
+                      '<text class="title1">' +"主演:"+res[k].importrole+ '</text>'+
+                      '<div id="layerBtn" class="title2">' +"评分:"+res[k].douban+ '</div>'+
+                      '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-xs">' +'详情'+
+                      '</button>'+'</div>'+
+                      '<div class="button1">'+'<button type="button" onclick="give_grade('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'我要评分'+
+                      '</button>'+'</div></div>'
+            }else{
+              list6+='<div class="book">' +'<img src="'+res[k].pic_url+'" class="pic" alt="">'+
+                      '<text class="title">' +"影名:"+res[k].name+ '</text>'+
+                      '<text class="title1">' +"主演:"+res[k].importrole+ '</text>'+
+                      '<div id="layerBtn" class="title2">' +"评分:"+res[k].douban+ '</div>'+
+                      '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-xs">' +'详情'+
+                      '</button>'+'</div>'+
+                      '<div class="button1">'+'<button type="button" onclick="give_grade('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'我要评分'+
+                      '</button>'+'</div></div>'
+            }
+          }
+          document.getElementById('bookbox1').innerHTML = list1;
+          document.getElementById('bookbox2').innerHTML = list2;
+          document.getElementById('bookbox3').innerHTML = list3;
+          document.getElementById('bookbox4').innerHTML = list4;
+          document.getElementById('bookbox5').innerHTML = list5;
+          document.getElementById('bookbox6').innerHTML = list6;
+
+        }else{
+          alert(data.msg)
+        }
+      }
+    })
+  }
+  function down(id) {
+    $.ajax({
+      url: "film/getinfo?id="+id,
+      data:"",
+      contentType:'application/json;charset=utf-8',
+      type: 'get',
+      dataType: 'json',
+      success(data){
+        if(data.code==1){
+          document.getElementById("user-admin").style.display="none"; //隐藏
+          $("iframe").attr("src",data.data[0].desc_url);
+        }else{
+          alert("该电影无详情信息！")
+        }
+      }
+    })
+  }
+
+
+  function  give_grade(id){
+    $.ajax({
+      url: "film/getinfo?id="+id,
+      data:"",
+      contentType:'application/json;charset=utf-8',
+      type: 'get',
+      dataType: 'json',
+      success(data){
+        let  moviename= document.getElementById("moviename")
+        if(data.code==1){
+          moviename.value = data.data[0].name
+        }else{
+          moviename.value = ""
+        }
+      }
+    })
+    layer.confirm('评分', {
+      title: "操作提示",
+      type: 1,
+      shade: 0.3,
+      area: ['40%', '30%'],
+      content: $('#biaodan'),
+      btn: ['确认', '关闭'] //可以无限个按钮
+      ,btn2: function(index, layero){
+        //按钮【按钮三】的回调
+      }
+    }, function(index, layero){
+      //按钮【按钮一】的回调
+      const bbsUser ={
+        "id": window.sessionStorage.getItem("id"),
+        "moviename":document.getElementById("moviename").value,
+        "grade":document.getElementById("grade").value
+      }
+      $.ajax({
+        url: "film/givegrade?id="+bbsUser.id+"&&moviename="+bbsUser.moviename+"&&grade="+bbsUser.grade,
+        data:"",
+        contentType:'application/json;charset=utf-8',
+        type: 'get',
+        dataType: 'json',
+        success(data){
+          if(data.code==1){
+            layer.msg("评分成功")
+          }else{
+            layer.msg("评分失败")
+          }
+        }
+      })
+    });
+  }
+
+
+
+</script>
+</body>
+</html>
