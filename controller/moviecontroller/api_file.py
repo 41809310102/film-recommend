@@ -7,6 +7,7 @@ from dao.Film import Film
 from dao.Gradeuser import Gradeuser
 from utils import create_sql, mybaits
 from utils.page import create_page
+import datetime
 
 api_url_movie = Blueprint('movic', __name__)
 
@@ -42,8 +43,6 @@ def get_list():
         "data": res
     }
     return json.dumps(res_data).encode('utf-8')
-
-
 
 
 @api_url_movie.route("/film/delfilm", methods=['POST', 'GET'])
@@ -119,11 +118,23 @@ def get_add():
     gradeuser.set_grade("{}".format(float(grade)))
     gradeuser.set_userid("{}".format(userid))
     gradeuser.set_movie_name("'{}'".format(moviename))
-    res = ['userid', 'movie_name', 'grade']
-    sql = create_sql.create_insert(res, [gradeuser.userid, gradeuser.movie_name, gradeuser.grade],
-                                   'gradeuser')
-    mybaits.add(sql)
-    res = {
-        'code': 1
-    }
+    createtime = datetime.datetime.now().strftime('%Y-%m-%d')
+    sql = create_sql.create_selectbyid(['id'], ['id', 'movie_name'], 'gradeuser',
+                                       ["{}".format(str(userid)), "'{}'".format(moviename)])
+    res = mybaits.select(sql, ['id'])
+    # 检查是否重复评分了
+    if len(res) > 0:
+        res = {
+            'code': -1
+        }
+    else:
+        res = ['userid', 'movie_name', 'grade', 'createtime']
+        sql = create_sql.create_insert(res,
+                                       [gradeuser.userid, gradeuser.movie_name, gradeuser.grade,
+                                        "'{}'".format(createtime)],
+                                       'gradeuser')
+        mybaits.add(sql)
+        res = {
+            'code': 1
+        }
     return json.dumps(res).encode('utf-8')

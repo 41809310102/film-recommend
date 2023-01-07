@@ -1,8 +1,5 @@
 import time
 
-from dao.Movie import Movie
-from mapper import movieMapper
-
 
 movice = []
 

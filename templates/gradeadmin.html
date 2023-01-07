@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="referrer" content="never">
-    <title>类型管理</title>
+    <title>评分管理</title>
     <script src="https://cdn.lyshark.com/javascript/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/layui-main/dist/css/layui.css">
     <script src="/layui-main/dist/layui.js"></script>
@@ -14,27 +14,27 @@
 
     <input type="text" name="id" id="id" style="display: none"/>
     <div class="layui-form-item">
-        <label class="layui-form-label">类型名称</label>
+        <label class="layui-form-label">用户昵称</label>
         <div class="layui-input-inline">
-            <input type="text" id="typename" name="typename" placeholder="请输入类型名称" class="layui-input">
+            <input type="text" disabled id="username" name="username" placeholder="请输入用户昵称" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">类型描述</label>
+        <label class="layui-form-label">电影名称</label>
         <div class="layui-input-inline">
-            <input type="text" id="typedesc" name="typedesc" placeholder="请输入描述" class="layui-input">
+            <input type="text" id="movie_name" disabled name="movie_name" placeholder="请输入电影名称" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">关注人数</label>
+        <label class="layui-form-label">评分</label>
         <div class="layui-input-inline">
-            <input type="text" id="num" name="num" placeholder="请输人关注人数" class="layui-input">
+            <input type="text" id="grade" name="grade" placeholder="请输人关注人数" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">状态</label>
+        <label class="layui-form-label">评分时间</label>
         <div class="layui-input-inline">
-            <input type="text" id="state" name="state" placeholder="请设置状态" class="layui-input">
+            <input type="text" id="createtime" name="createtime" placeholder="请设置状态" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -47,16 +47,7 @@
 
 <div class="demoTable layui-form">
     <div class="layui-inline">
-        <input class="layui-input" name="typename" id="bk" autocomplete="off" placeholder="搜索类型">
-    </div>
-    <div class="layui-inline">
-        <input class="layui-input" name="typedesc" id="au" autocomplete="off" placeholder="搜索描述">
-    </div>
-
-    <div class="layui-inline" >
-        <select name="typeid" id="typeSelect" lay-filter="aihao">
-            <option value=""></option>
-        </select>
+        <input class="layui-input" name="moviename" id="au" autocomplete="off" placeholder="搜索电影">
     </div>
     <button class="layui-btn" data-type="reload" id="reloadTabBtn">搜索</button>
 
@@ -68,14 +59,13 @@
 <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>-->
 <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>-->
 <!--        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>-->
-        <button class="layui-btn layui-btn-sm" lay-event="addBtn">新增</button>
+<!--        <button class="layui-btn layui-btn-sm" lay-event="addBtn">新增</button>-->
     </div>
 </script>
 
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-
 </script>
 
 <script type="text/html" id="titleTpl">
@@ -96,8 +86,7 @@
             console.log($("#bk").val())
             table.reload('table1',{
                 where:{
-                    typename:$("#bk").val(),
-                    typedesc:$("#au").val(),
+                    name:$("#au").val(),
                 },
                 page: {
                     curr:1//重新从第一页开始
@@ -109,7 +98,7 @@
         //页面加载完成就立即填充书籍类型的下拉框中
         $.ajax({
             type:'get',
-            url:"book/getAllType",
+            url:"grade/getAlluser",
             dataType:'json',//默认接收到的类型为json
             success:function (types) {
                 // console.log(types);
@@ -121,11 +110,11 @@
                     并给option添加值
                      */
                     $("#typeSelect").append(
-                        $("<option></option>").attr("value",obj.typeid).text(obj.typename)
+                        $("<option></option>").attr("value",obj.id).text(obj.username)
                     )
 
                     $("#typeIdSelect").append(
-                        $("<option></option>").attr("value",obj.typeid).text(obj.typename)
+                        $("<option></option>").attr("value",obj.id).text(obj.username)
                     )
                 })
                 // 渲染下拉框
@@ -137,17 +126,16 @@
         table.render({
             id:'table1',
             elem: '#test'
-            ,url:'http://127.0.0.1:5001/type/list'
+            ,url:'http://127.0.0.1:5001/grade/list'
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
-            ,title: '电影表'
+            ,title: '评分表'
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'}
                 ,{field: 'id', title: '编号', width:80, sort: true, align:'center'}
-                ,{field:'typename', width:120, title:'名称'}
-                ,{field:'typedesc', title:'类型描述'}
-                ,{field:'num', title:'关注人数'}
-                ,{field:'updatetime', title:'编辑时间'}
-                ,{field:'state', title:'状态'}
+                ,{field:'username', width:120, title:'用户昵称'}
+                ,{field:'movie_name', title:'电影名称'}
+                ,{field:'grade', title:'评分'}
+                ,{field:'createtime', title:'编辑时间'}
                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
             ]]
             ,page: true,
@@ -180,7 +168,7 @@
                     $("#bookForm")[0].reset();
                     layer.open({
                         type: 1,//页面层
-                        title:'新增类型信息',
+                        title:'新增电影信息',
                         area: ['400px', '500px'],
                         offset:'100px',
                         content: $("#bookForm")
@@ -192,7 +180,7 @@
             console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
             $.ajax({
                 type:'post',
-                url:'type/add_type',
+                url:'grade/add_grade',
                 data:data.field,
                 dataType:'json',
                 success: function (result) {
@@ -213,10 +201,10 @@
             var data = obj.data;
             console.log(obj)
             if(obj.event === 'del'){
-                layer.confirm('真的删除这个电影信息吗？', function(index){
+                layer.confirm('真的删除这个评分信息吗？', function(index){
                     $.ajax({
                         type:'get',
-                        url:'type/deltype',
+                        url:'grade/delgrade',
                         data:{"id": data.id},
                         success:function (msg) {
                             layer.msg(msg);
@@ -239,24 +227,6 @@
                 //将当前点击行的数据填充到表单中去
                 form.val('bookForm', data);
             }else if (obj.event==='updateStatus'){
-                layer.confirm('确定要上架/下架吗?',function (index) {
-                    $.ajax({
-                        type:'get',
-                        url:'${pageContext.request.contextPath}/book/updateStatus',
-                        data:{"bookid": data.bookid,"status":data.status},
-                        dataType: 'json',//预期的服务器返回的数据类型
-                        success:function (result) {//result是前面返回过来的
-                            if (result.code==1){
-                                layer.msg(result.msg);
-                                //成功后刷新表格
-                                table.reload("table1");
-                            }else {
-                                layer.msg(result.msg);
-                            }
-                        }
-                    })
-                    layer.close(index);
-                });
 
             }
         });

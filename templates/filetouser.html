@@ -27,6 +27,8 @@
     <li>科幻</li>
     <li>动画</li>
     <li>战争</li>
+    <li>恐怖</li>
+    <li>其他</li>
   </ul>
   <div class="layui-tab-content">
     <div class="layui-tab-item layui-show">
@@ -67,7 +69,7 @@
     </div>
     <div class="layui-tab-item">
       <div class="layui-card">
-        <div class="layui-card-header">战争电影</div>
+        <div class="layui-card-header">动画电影</div>
         <div class="layui-card-body">
           <div class="bookbox" id="bookbox5">
           </div>
@@ -76,9 +78,27 @@
     </div>
     <div class="layui-tab-item">
       <div class="layui-card">
-        <div class="layui-card-header">动画信息</div>
+        <div class="layui-card-header">战争电影</div>
         <div class="layui-card-body">
           <div class="bookbox" id="bookbox6">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="layui-tab-item">
+      <div class="layui-card">
+        <div class="layui-card-header">恐怖电影</div>
+        <div class="layui-card-body">
+          <div class="bookbox" id="bookbox7">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="layui-tab-item">
+      <div class="layui-card">
+        <div class="layui-card-header">其他</div>
+        <div class="layui-card-body">
+          <div class="bookbox" id="bookbox8">
           </div>
         </div>
       </div>
@@ -188,6 +208,8 @@
           let list4 = '';
           let list5 = '';
           let list6 = '';
+          let list7= '';
+          let list8= '';
           let  i = data.data.length;
           for(let k = 0;k<i;k++){
             if(res[k].typename=='爱情'){
@@ -226,7 +248,7 @@
                       '</button>'+'</div>'+
                       '<div class="button1">'+'<button type="button" onclick="give_grade('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'我要评分'+
                       '</button>'+'</div></div>'
-            }else if(res[k].typename=='战争'){
+            }else if(res[k].typename=='动画'){
               list5+='<div class="book">' +'<img src="'+res[k].pic_url+'" class="pic" alt="">'+
                       '<text class="title">' +"影名:"+res[k].name+ '</text>'+
                       '<text class="title1">' +"主演:"+res[k].importrole+ '</text>'+
@@ -235,8 +257,26 @@
                       '</button>'+'</div>'+
                       '<div class="button1">'+'<button type="button" onclick="give_grade('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'我要评分'+
                       '</button>'+'</div></div>'
-            }else{
+            }else if(res[k].typename=='战争'){
               list6+='<div class="book">' +'<img src="'+res[k].pic_url+'" class="pic" alt="">'+
+                      '<text class="title">' +"影名:"+res[k].name+ '</text>'+
+                      '<text class="title1">' +"主演:"+res[k].importrole+ '</text>'+
+                      '<div id="layerBtn" class="title2">' +"评分:"+res[k].douban+ '</div>'+
+                      '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-xs">' +'详情'+
+                      '</button>'+'</div>'+
+                      '<div class="button1">'+'<button type="button" onclick="give_grade('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'我要评分'+
+                      '</button>'+'</div></div>'
+            }else if(res[k].typename=='恐怖'||res[k].typename=='惊悚'){
+              list7+='<div class="book">' +'<img src="'+res[k].pic_url+'" class="pic" alt="">'+
+                      '<text class="title">' +"影名:"+res[k].name+ '</text>'+
+                      '<text class="title1">' +"主演:"+res[k].importrole+ '</text>'+
+                      '<div id="layerBtn" class="title2">' +"评分:"+res[k].douban+ '</div>'+
+                      '<div class="buttons">'+'<button type="button" onclick="down('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-xs">' +'详情'+
+                      '</button>'+'</div>'+
+                      '<div class="button1">'+'<button type="button" onclick="give_grade('+res[k].id+')" class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm">' +'我要评分'+
+                      '</button>'+'</div></div>'
+            }else{
+              list8+='<div class="book">' +'<img src="'+res[k].pic_url+'" class="pic" alt="">'+
                       '<text class="title">' +"影名:"+res[k].name+ '</text>'+
                       '<text class="title1">' +"主演:"+res[k].importrole+ '</text>'+
                       '<div id="layerBtn" class="title2">' +"评分:"+res[k].douban+ '</div>'+
@@ -252,7 +292,8 @@
           document.getElementById('bookbox4').innerHTML = list4;
           document.getElementById('bookbox5').innerHTML = list5;
           document.getElementById('bookbox6').innerHTML = list6;
-
+          document.getElementById('bookbox7').innerHTML = list7;
+          document.getElementById('bookbox8').innerHTML = list8;
         }else{
           alert(data.msg)
         }
@@ -320,8 +361,8 @@
         success(data){
           if(data.code==1){
             layer.msg("评分成功")
-          }else{
-            layer.msg("评分失败")
+          }else if(data.code==-1){
+            layer.msg("你已经给这个电影评分啦~~~，请勿重复评分")
           }
         }
       })

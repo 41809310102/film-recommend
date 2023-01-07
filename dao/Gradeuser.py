@@ -30,5 +30,5 @@ class Gradeuser(object):
         self.grade = value
 
     def get_classinfo(self):
-        res = ['id', 'userid', 'movie_name', 'grade']
+        res = ['id', 'userid', 'movie_name', 'grade', 'createtime']
         return res

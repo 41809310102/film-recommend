@@ -1,4 +1,3 @@
-
 def create_select(prev_list, next_list, table_name, data):
     str_code = "select "
     len_k = len(prev_list)
@@ -14,6 +13,7 @@ def create_select(prev_list, next_list, table_name, data):
     str_code = str_code + "{}".format(next_list[len_l - 1]) + " like " + str(data[len_l - 1])
     return str_code
 
+
 def create_selectbyid(prev_list, next_list, table_name, data):
     str_code = "select "
     len_k = len(prev_list)
@@ -26,7 +26,8 @@ def create_selectbyid(prev_list, next_list, table_name, data):
     len_l = len(next_list)
     for k in range(0, len_l - 1):
         str_code = str_code + "{}".format(next_list[k]) + "=" + str(data[k]) + " and "
-    str_code = str_code + "{}".format(next_list[len_l - 1]) + "=" + str(data[len_l - 1])
+    str_code = str_code + "{}".format(next_list[len_l-1]) + "=" + str(data[len_l-1])
+    print(str_code)
     return str_code
 
 
@@ -66,9 +67,9 @@ def create_db(table_name, object_class):
     sql += "id int not null auto_increment primary key," + "\n"
     dists = object_class.get_classinfo()
     len_k = len(dists)
-    for k in range(1, len_k -1):
-        sql += "{} varchar(30),".format(dists[k] ) +"\n"
-    sql += "{} varchar(30))".format(dists[len_k -1]) + "\n"
+    for k in range(1, len_k - 1):
+        sql += "{} varchar(30),".format(dists[k]) + "\n"
+    sql += "{} varchar(30))".format(dists[len_k - 1]) + "\n"
     return sql
 
 
